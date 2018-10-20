@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+  <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="OrbitControls.js"></script>
+
+
+  <script>
+  // ページの読み込みを待つ
+  window.addEventListener('load', init);
+
+  // サイズを指定
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  var scale = 20.0;
+
+  function init() {
+    // レンダラーを作成
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.querySelector('#myCanvas')
+    });
+    renderer.setSize(width, height);
+
+    // シーンを作成
+    const scene = new THREE.Scene();
+
+    // 光源を追加
+    var ambient = new THREE.AmbientLight( 0x101030 ); // AmbientLightでは映らない可能性
+    scene.add( ambient );
+    var directionalLight = new THREE.DirectionalLight( 0xffeedd, 10 ); // directionalLightでは映る
+    directionalLight.position.set( 0, 0, 1 );
+    scene.add( directionalLight );
+    var directionalLight2 = new THREE.DirectionalLight( 0xffeedd );
+    directionalLight2.position.set( 0, 5, -5 );
+    scene.add( directionalLight2 );
+
+    // カメラを作成
+    camera = new THREE.PerspectiveCamera( 60, width / height, 0.01, 10000 );
+    camera.position.set(1, 0.5, 1);
+    const controls = new THREE.OrbitControls(camera);
+
+    const loader = new THREE.GLTFLoader();
+    const url = 'LabBear_v002_treejsTest.gltf';
+
+    loader.load(url, function (data) {
+      const gltf = data;
+      const object = gltf.scene;
+      scene.add(object);
+    });
+
+    tick();
+    // 毎フレーム時に実行されるループイベントです
+    function tick() {
+      // レンダリング
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+
+  }
+
+
+
+
+  </script>
+</head>
+
+<body>
+  <canvas id="myCanvas"></canvas>
+</body>
+
+</html>
